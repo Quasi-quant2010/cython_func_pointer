@@ -1,0 +1,51 @@
+import numpy as np
+cimport numpy as np
+cimport cython
+from cpython cimport bool# for the python type 
+
+ctypedef int (*filter_ptr)(int (*func_ptr)(int), 
+                           long*, long*, int)
+
+cdef int odd(int val):
+    if val % 2==1:
+        return 1
+    else:
+        return 0
+
+cdef int even(int val):
+    cdef int i,j,k
+    if val % 2==0:
+        return 1
+    else:
+        return 0
+
+cdef int filter_func(int (*func_ptr)(int), long *items, long *results, int n):
+    cdef int i,j=0
+    for i in xrange(n):
+        if func_ptr(items[i]):
+            print i, func_ptr(items[i])
+            j += 1
+            results[j] = items[i]
+    return j
+
+
+def main():
+    cdef long[::1] items = np.zeros(9, np.intp)
+    cdef long[::1] odds = np.zeros(9, np.intp)
+    cdef long[::1] evens = np.zeros(9, np.intp)
+    cdef long[::1] results = np.zeros(9, np.intp)
+    cdef int i, n
+    ascontig = np.ascontiguousarray
+
+    for i in xrange(9):
+        items[i] = i + 1
+        
+    print ascontig(items,dtype=np.intp
+    ## odd
+    #cdef func_ptr calculate_func
+    #calculate_func = &odd
+    #n = dist_func(calculate_func, iptr, rptr, 9) 
+    ## even
+    #calculate_func = &even
+    #n = dist_func(calculate_func, iptr, rptr, 9) 
+
